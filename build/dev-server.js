@@ -30,7 +30,7 @@ const ratings = appData.ratings
 // 编写路由
 const apiRouters = express.Router()
 // 定义接口  BEGIN
-apiRouters.get('/seller',function(req,res){
+apiRouters.get('/sellers',function(req,res){
   res.json({
     errno: 0,
     data: seller
