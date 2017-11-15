@@ -17,6 +17,9 @@ border-1px($color)
     width: 100%
     border-bottom: 1px solid $color
     content: ' '
+border-none()
+  &:after
+    display: none
 /* 需要注意 定义另一个函数，函数名必须顶格写, 默认格式化后不是顶格，如果不是顶格该函数无效 */
 bg-image($url)
   background-image: url($url + "@2x.png")
