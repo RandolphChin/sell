@@ -29,7 +29,10 @@ new Vue({
   el: '#app',
   template: '<App/>',
   components: {App},
-  router
+  router,
+  data: {
+    eventHub: new Vue()
+  }
 })
 
 /* router.go('/goods') 设置默认路由，这里使用 go 则浏览器会不断的刷新页面 */

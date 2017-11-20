@@ -2,7 +2,7 @@
   <div class="goods">
     <div class="menu-wrapper" ref="menuWrapper">
       <ul>
-        <li v-for="(item,index) in goods" class="menu-item" :class="{'current':currentIndex===index}">
+        <li v-for="(item,index) in goods" class="menu-item" :class="{'current':currentIndex===index}" @click="selectMenu(index,$event)">
           <span class="text border-1px">
             <span v-show="item.type > 0" class="icon" :class="classMap[item.type]"></span>  {{item.name}}
           </span>
@@ -28,17 +28,23 @@
                 <span class="now">￥{{food.price}}</span>
                 <span class="old" v-show="food.oldPrice">￥{{food.oldPrice}}</span>
               </div>
+              <div class="cartcontrol-wrapper">
+                <cartcontrol :food="food"></cartcontrol>
+              </div>
             </div>
           </ul>
         </li>
       </ul>
     </div>
+    <shopcart :selectFoods="selectFoods" :deliveryPrice="seller.deliveryPrice" :minPrice="seller.minPrice" ></shopcart>
   </div>
 
 </template>
 
 <script type="text/ecmascript-6">
   import BScroll from 'better-scroll'
+  import shopcart from 'components/shopcart/shopcart'
+  import cartcontrol from 'components/cartcontrol/cartcontrol'
   const ERR_OK = 0
   export default {
     props: {
@@ -63,6 +69,18 @@
           }
         }
         return 0
+      },
+      selectFoods () {
+        let foods = []
+        this.goods.forEach((good) => {
+          good.foods.forEach((food) => {
+            if (food.count) {
+              // 选中的 food 放入 foods 中
+              foods.push(food)
+            }
+          })
+        })
+        return foods
       }
     },
     created () {
@@ -70,18 +88,30 @@
         response = response.body
         if (response.errno === ERR_OK) {
           this.goods = response.data
-          this.$nextTick(() => {
+          this.$nextTick(() => {  // vue数据更新后，dom结构的改变是发生在 nextTick 回调函数之后的
             this._initScroll()
             this._calculateHeight()
           })
         }
       })
       this.classMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee']
+      // 接收子组件触发的事件  this.$root.eventHub.$emit('cart.add', event.target)
+      this.$root.eventHub.$on('cart.add', (target) => {
+        this._drop(target)
+      })
     },
     methods: {
+      selectMenu (index, event) {
+        let foodList = this.$refs.foodsWrapper.querySelectorAll('.food-list-hook')
+        let el = foodList[index]
+        this.foodsScroll.scrollToElement(el, 300)
+      },
+      _drop (target) {
+        console.log('I am in good.vue')
+      },
       _initScroll () {
-        this.menuScroll = new BScroll(this.$refs.menuWrapper)
-        this.foodsScroll = new BScroll(this.$refs.foodsWrapper, {probeType: 3})
+        this.menuScroll = new BScroll(this.$refs.menuWrapper, {click: true})
+        this.foodsScroll = new BScroll(this.$refs.foodsWrapper, {click: true, probeType: 3})
         this.foodsScroll.on('scroll', (pos) => {
           this.scrollY = Math.abs(Math.round(pos.y))
         })
@@ -96,6 +126,9 @@
           this.listHeight.push(height)
         }
       }
+    },
+    components: {
+      shopcart, cartcontrol
     }
   }
 </script>
@@ -202,4 +235,8 @@
               text-decoration: line-through
               font-size: 10px
               color: rgb(147, 153, 159)
+          .cartcontrol-wrapper
+            position: absolute
+            right: 0
+            bottom: 12px
 </style>
