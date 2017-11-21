@@ -8,9 +8,12 @@ import goods from './components/goods/goods.vue'
 import ratings from './components/ratings/ratings.vue'
 import sellers from './components/sellers/sellers.vue'
 import './common/stylus/index.styl'
-
+import {Alert} from 'wc-messagebox'
+// https://github.com/helicopters/wc-messagebox
+import 'wc-messagebox/style.css'
 Vue.config.productionTip = false
 
+Vue.use(Alert)
 Vue.use(VueRouter)
 Vue.use(VueResource)
 const routes = [
