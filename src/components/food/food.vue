@@ -41,7 +41,7 @@
                 <span class="name">{{rating.username}}</span>
                 <img class="avatar" width="12" height="12" :src="rating.avatar">
               </div>
-              <div class="time">{{rating.rateTime | formatTime}}</div>
+              <div class="time">{{rating.rateTime | time('YYYY-MM-DD HH:mm:ss')}}</div>
               <p class="text">
                 <span :class="{'icon-thumb_up':rating.rateType ===0,'icon-thumb_down':rating.rateType ===1}"></span>{{rating.text}}
               </p>
@@ -59,7 +59,7 @@
   import BScroll from 'better-scroll'
   import Vue from 'vue'
   // export 不是 default 需要添加大括号
-  import {formatDate} from 'common/js/date'
+  import 'common/js/date.js'
   import cartcontrol from 'components/cartcontrol/cartcontrol'
   import split from 'components/split/split'
   import ratingselect from 'components/ratingselect/ratingselect'
@@ -132,12 +132,6 @@
           this.scroll.refresh()
         })
       })
-    },
-    filters: {
-      formatTime (time) {
-        let date = new Date(time)
-        return formatDate(date, 'yyyy-MM-dd hh:mm')
-      }
     },
     components: {
       cartcontrol, split, ratingselect
