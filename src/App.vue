@@ -12,25 +12,38 @@
         <router-link to="/sellers">商家</router-link>
       </div>
     </div>
-    <router-view :seller="seller"></router-view>
+    <keep-alive>
+      <router-view :seller="seller" ></router-view>
+    </keep-alive>
+
   </div>
 </template>
 
 <script type="text/ecmascript-6">
+  import {urlParser} from 'common/js/util.js'
   import header from 'components/header/header.vue'
-
   const ERR_OK = 0
   export default {
     data () {
       return {
-        seller: {}
+        seller: {
+          id: (() => {
+            let queryParam = urlParser()
+            console.log(queryParam)
+            return queryParam.id
+          })()
+        }
       }
     },
     created () {
-      this.$http.get('/api/sellers').then(response => {
+      this.$http.get('/api/sellers?id=' + this.seller.id).then(response => {
         response = response.body
         if (response.errno === ERR_OK) {
           this.seller = response.data
+          // 响应式 给seller对象添加 属性 id
+          console.log(this.seller.id)
+          this.seller = Object.assign({}, this.seller, {id: urlParser().id})
+          console.log(this.seller.id)
         }
       })
     },

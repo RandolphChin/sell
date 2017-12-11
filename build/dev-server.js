@@ -8,8 +8,11 @@ if (!process.env.NODE_ENV) {
 
 const opn = require('opn')
 const path = require('path')
+// nodejs 一个框架，用于启动 web server
 const express = require('express')
+// 核心编译工具
 const webpack = require('webpack')
+// 代理中间键 ，代理转发 api
 const proxyMiddleware = require('http-proxy-middleware')
 const webpackConfig = require('./webpack.dev.conf')
 
@@ -50,7 +53,7 @@ apiRouters.get('/ratings',function (req,res) {
 })
 // 定义接口  END
 // express 要使用定义的接口需要使用 app.user() 方法
-app.use('/api',apiRouters)
+app.use('/api', apiRouters)
 const compiler = webpack(webpackConfig)
 
 const devMiddleware = require('webpack-dev-middleware')(compiler, {
