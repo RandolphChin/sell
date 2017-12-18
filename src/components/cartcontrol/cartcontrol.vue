@@ -45,6 +45,9 @@
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus">
+  /* transition:运动的样式 持续时间 运动形式 延迟时间;} transition: all 0.4s linear
+  *   all:元素产生任何属性值变化时都将执行transition效果   ; 运动形式 linear
+  */
   .cartcontrol
     .cart-decrease
       display: inline-block
